@@ -17,15 +17,50 @@ Using SVN:
 
     $ svn co http://svn.symfony-project.com/plugins/sfDoctrineEditableComponentPlugin plugins/
 
-Then run the `cache:clear` and `doctrine:build-all` tasks.
+Adds the `sfEditableComponentAdminFilter` filter in your application's `filter.yml` file:
+
+    sfEditableComponentAdmin:
+      class: sfEditableComponentAdminFilter
+
+Then, you're ready to run the following tasks:
+
+    $ php symfony cache:clear
+    $ php symfony doctrine:build-all
+
+You must also enable the `sfEditableComponent` module in the `settings.yml` file of your application:
+
+    all:
+      .settings:
+        enabled_modules: [default, sfEditableComponent]
 
 ### Usage
 
-TODO
+You can call editable components whithin any template, even if they don't exist yet in the database, this way:
+
+    <?php include_component('sfEditableComponent', 'show', array('name' => 'content1')) ?>
+    <?php include_component('sfEditableComponent', 'show', array('name' => 'content2')) ?>
+
+### Custom configuration
+
+You can configure the plugin in your `app.yml` file, in the `namespace`. You can look at the `app.yml` file bundled with the plugin, which contains all plugin's default value. 
+
+Here are the main options available:
+
+ - `admin_credential`: the name of the required credential for edit editable component
+ - `controls.OK`: The label of the submit button in update form
+ - `controls.Cancel`: The label of the cancel button in update form
+ - `css_class_name`: The name of the css classname to use for editable content divs
+ - `default_content.html`: The default content to fill an editable HTML component with
+ - `default_content.plain`: The default content to fill an editable plan text component with
+ - `update_error`: The error to display if the edition of an editable component fails
 
 ### License
 
 This plugin is licensed under the terms of the MIT license.
+
+### About the author
+
+This plugin has been created and is currently maintened by Nicolas Perriault (nperriault at gmail dot com).
 
 ### References
 
