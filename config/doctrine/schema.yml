@@ -1,0 +1,31 @@
+sfEditableComponent:
+  options:
+    collate: utf8_unicode_ci
+    charset: utf8
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      autoincrement: true
+  columns:
+    namespace:
+      type: string(255)
+      notblank: true
+      default: default
+    name:
+      type: string(255)
+      notblank: true
+      unique: true
+    type:
+      type: enum
+      values:
+        - html
+        - plain
+      default: html
+    content:
+      type: string(5000)
+      notnull: true
+  indexes:
+    unicity:
+      fields: [name, namespace, type] 
+      type: unique

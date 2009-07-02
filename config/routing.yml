@@ -1,0 +1,3 @@
+editable_component_service:
+  url:   /editable_component_service
+  param: { module: sfEditableComponent, action: update }

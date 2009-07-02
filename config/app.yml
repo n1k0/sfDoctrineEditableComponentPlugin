@@ -1,0 +1,10 @@
+all:
+  sfDoctrineEditableComponentPlugin:
+    admin_credential:      editable_content_admin
+    controls.OK:           OK
+    controls.Cancel:       Cancel
+    css_class_name:        sfEditableComponent
+    default_content.html:  '<p>Double-click to edit me!</p>'
+    default_content.plain: 'Double-click to edit me!'
+    update_error: >
+      <p class="sfDoctrineEditableComponentError">Error while saving your component.</p>'

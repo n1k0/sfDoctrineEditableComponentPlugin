@@ -1,0 +1,35 @@
+sfDoctrineEditableComponent plugin
+==================================
+
+**WARNING:** This plugin is currently in a very pre-alpha state, do not use in production.
+
+This plugin allows to set up edit-in-place components (plain or wysiwyg), typically to enable content administration directly from the a frontend application.
+
+The plugin uses some cool libs like jQuery, jEditable, jWysiwyg and the Doctrine ORM for persistence. Rich HTML content can be filtered in order to avoid XSS attacks using HTMLPurifier.
+
+### Installation
+
+Using the native plugin installation system of Symfony:
+
+    $ php symfony plugin:install sfDoctrineEditableComponentPlugin
+
+Using SVN:
+
+    $ svn co http://svn.symfony-project.com/plugins/sfDoctrineEditableComponentPlugin plugins/
+
+Then run the `cache:clear` and `doctrine:build-all` tasks.
+
+### Usage
+
+TODO
+
+### License
+
+This plugin is licensed under the terms of the MIT license.
+
+### References
+
+ - jQuery
+ - jEditable plugin
+ - jWysiwyg
+ - HTMLPurifier
