@@ -7,7 +7,6 @@ sfEditableComponent:
       type: integer(4)
       primary: true
       autoincrement: true
-  columns:
     namespace:
       type: string(255)
       notblank: true

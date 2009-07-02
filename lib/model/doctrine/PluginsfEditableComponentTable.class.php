@@ -7,7 +7,17 @@ class PluginsfEditableComponentTable extends Doctrine_Table
   const 
     DEFAULT_NAMESPACE = 'default',
     DEFAULT_TYPE = 'html';
-    
+  
+  /**
+   * Updates a component
+   *
+   * @param  string       $name       The component name
+   * @param  string       $content    The component content
+   * @param  string|null  $type       The component type (html, plain) (optional)
+   * @param  string|null  $namespace  The component namespace (optional)
+   *
+   * @return sfEditableComponent
+   */
   static function updateComponent($name, $content, $type = null, $namespace = null)
   {
     $component = Doctrine::getTable('sfEditableComponent')->getEditableComponent($name, $type, $namespace);
@@ -15,9 +25,19 @@ class PluginsfEditableComponentTable extends Doctrine_Table
     // FIXME: filter html content
     $component->setContent($content);
     
-    $component->save();
+    return $component->save();
   }
   
+  /**
+   * Retrieves or creates a component
+   *
+   * @param  string       $name           The component name
+   * @param  string|null  $type           The component type (html, plain) (optional)
+   * @param  string|null  $namespace      The component namespace (optional)
+   * @param  Boolean      $createAndSave  Create a new record if component not found?
+   *
+   * @return sfEditableComponent
+   */
   static public function getEditableComponent($name, $type = null, $namespace = null, $createAndSave = true)
   {
     if (is_null($type))
@@ -47,20 +67,7 @@ class PluginsfEditableComponentTable extends Doctrine_Table
       
       if (true === $createAndSave)
       {
-        try
-        {
-          $component->save();
-        }
-        catch (Doctrine_Validator_Exception $e)
-        {
-          if (preg_match('/(unique)/', $e->getMessage()))
-          {
-            throw new RuntimeException(sprintf('A "%s" "%s" editable component in the "%s" namespace already exists in the database, and therefore connot be declared twice.', 
-                                               $name, $type, $namespace));
-          }
-          
-          throw $e;
-        }
+        $component->save();
       }
     }
     
