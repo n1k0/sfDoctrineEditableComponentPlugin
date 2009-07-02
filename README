@@ -33,6 +33,10 @@ You must also enable the `sfEditableComponent` module in the `settings.yml` file
       .settings:
         enabled_modules: [default, sfEditableComponent]
 
+Last, don't forget to publish the assets used by the plugin:
+
+    $ php symfony plugin:publish-assets
+
 ### Usage
 
 You can call editable components whithin any template, even if they don't exist yet in the database, this way:
