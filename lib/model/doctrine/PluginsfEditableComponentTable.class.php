@@ -20,7 +20,7 @@ class PluginsfEditableComponentTable extends Doctrine_Table
    */
   static function updateComponent($name, $content, $type = null, $namespace = null)
   {
-    $component = Doctrine::getTable('sfEditableComponent')->getEditableComponent($name, $type, $namespace);
+    $component = Doctrine::getTable('sfEditableComponent')->getComponent($name, $type, $namespace);
     
     // FIXME: filter html content
     $component->setContent($content);
@@ -38,7 +38,7 @@ class PluginsfEditableComponentTable extends Doctrine_Table
    *
    * @return sfEditableComponent
    */
-  static public function getEditableComponent($name, $type = null, $namespace = null, $createAndSave = true)
+  static public function getComponent($name, $type = null, $namespace = null, $createAndSave = true)
   {
     if (is_null($type))
     {

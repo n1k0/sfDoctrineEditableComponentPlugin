@@ -14,6 +14,6 @@ class sfEditableComponentComponents extends sfComponents
    */
   public function executeShow()
   {
-    $this->component = sfEditableComponentTable::getEditableComponent($this->name, $this->type, $this->namespace);
+    $this->component = sfEditableComponentTable::getComponent($this->name, $this->type, $this->namespace);
   }
 }

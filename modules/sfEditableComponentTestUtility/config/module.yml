@@ -1,0 +1,6 @@
+all:
+  enabled: off
+  is_internal: on
+test:
+  enabled: on
+  is_internal: off

@@ -13,11 +13,19 @@ class sfDoctrineEditableComponentPluginConfiguration extends sfPluginConfigurati
    */
   public function configure()
   {
-    $this->dispatcher->connect('context.load_factories', array($this, 'listendForContextLoadFactories'));
+    $this->dispatcher->connect('context.load_factories', array($this, 'listenForContextLoadFactories'));
   }
   
-  public function listendForContextLoadFactories()
+  public function listenForContextLoadFactories()
   {
-    sfConfig::set('sf_enabled_modules', array_merge(sfConfig::get('sf_enabled_modules', array()), array('sfEditableComponent')));
+    $pluginModules = array('sfEditableComponent');
+    
+    // Enables the auth testing service utility only in 'test' env
+    if ('test' === sfConfig::get('sf_environment'))
+    {
+      $pluginModules[] = 'sfEditableComponentTestUtility';
+    }
+    
+    sfConfig::set('sf_enabled_modules', array_merge(sfConfig::get('sf_enabled_modules', array()), $pluginModules));
   }
 }
