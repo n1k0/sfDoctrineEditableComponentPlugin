@@ -1,6 +1,20 @@
-editable_component_service:
-  url:   /editable_component_service
-  param: { module: sfEditableComponent, action: update }
+editable_component_admin_css:
+  url:   /js/editable_component.css
+  param: { module: sfEditableComponent, action: css, sf_format: css }
+
+editable_component_admin_js:
+  url:   /js/editable_component.js
+  param: { module: sfEditableComponent, action: js, sf_format: js }
+
+editable_component_service_get:
+  url:   /service/components/get
+  param: { module: sfEditableComponent, action: get }
+
+editable_component_service_update:
+  url:   /service/components/update
+  param: { module: sfEditableComponent, action: update, sf_format: json }
+  requirement:
+    sf_method: [post]
 
 editable_component_auth_test_service:
   url:   /editable_component_auth_test_service

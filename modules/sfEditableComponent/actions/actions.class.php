@@ -8,31 +8,83 @@
  */
 class sfEditableComponentActions extends sfActions
 {
- /**
-  * Update an editable component
-  *
-  * @param sfRequest $request A request object
-  */
+  public function preExecute()
+  {
+    $assetsConfig = sfConfig::get('app_sfDoctrineEditableComponentPlugin_assets', array());
+    $this->pluginWebRoot = isset($assetsConfig['web_root']) ? $assetsConfig['web_root'] : '';
+    $this->componentCssClassName = sfConfig::get('app_sfDoctrineEditableComponentPlugin_component_css_class_name', 'sfEditableComponent');
+    $this->defaultContent = sfConfig::get('app_sfDoctrineEditableComponentPlugin_default_content', 'Edit me');
+  }
+  
+  public function executeCss(sfWebRequest $request)
+  {
+  }
+  
+  public function executeJs(sfWebRequest $request)
+  {
+  }
+  
+  /**
+   * Retrieves a component content
+   *
+   * @param  sfWebRequest  $request
+   */
+  public function executeGet(sfWebRequest $request)
+  {
+    $result = $error = '';
+    
+    try
+    {
+      $component = sfEditableComponentTable::getComponent($this->name, $this->type);
+    }
+    catch (Exception $e)
+    {
+      $error = $e->getMessage();
+    }
+    
+    return $this->renderText(json_encode(array(
+      'error'  => $error,
+      'result' => $component ? $component->getContent() : '',
+    )));
+  }
+  
+  /**
+   * Update an editable component
+   *
+   * @param sfRequest $request A request object
+   */
   public function executeUpdate(sfWebRequest $request)
   {
+    $result = $error = '';
+    
     if (!$this->getUser()->hasCredential(sfConfig::get('app_sfDoctrineEditableComponentPlugin_admin_credential', 'editable_content_admin')))
     {
       $this->getResponse()->setStatusCode(403);
       
-      return $this->renderText('Forbidden');
+      $error = 'Forbidden';
     }
     
-    $this->forward404Unless($request->isMethod('post') && $request->hasParameter('id') && $request->hasParameter('value'), 'No POST or missing parameters');
+    if (!$request->hasParameter('id') || !$request->hasParameter('value'))
+    {
+      $error = 'Missing parameters';
+    }
     
     try
     {
-      sfEditableComponentTable::updateComponent($request->getParameter('id'), $html = $request->getParameter('value'));
+      sfEditableComponentTable::updateComponent(
+        $name   = $request->getParameter('id'), 
+        $result = $request->getParameter('value'), 
+        $type   = $request->getParameter('type', PluginsfEditableComponentTable::DEFAULT_TYPE)
+      );
     }
     catch (Doctrine_Exception $e)
     {
-      $html = sfConfig::get('app_sfDoctrineEditableComponent_update_error', '<p>Error.</p>');
+      $error = sprintf('Unable to update component "%s": %s', $name, $e->getMessage());
     }
 
-    return $this->renderText($html);
+    return $this->renderText(json_encode(array(
+      'error'  => $error,
+      'result' => $result,
+    )));
   }
 }

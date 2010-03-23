@@ -16,7 +16,7 @@ class sfDoctrineEditableComponentPluginConfiguration extends sfPluginConfigurati
     $this->dispatcher->connect('context.load_factories', array($this, 'listenForContextLoadFactories'));
   }
   
-  public function listenForContextLoadFactories()
+  public function listenForContextLoadFactories(sfEvent $event)
   {
     $pluginModules = array('sfEditableComponent');
     
@@ -27,5 +27,8 @@ class sfDoctrineEditableComponentPluginConfiguration extends sfPluginConfigurati
     }
     
     sfConfig::set('sf_enabled_modules', array_merge(sfConfig::get('sf_enabled_modules', array()), $pluginModules));
+    
+    // Helper loading
+    $event->getSubject()->getConfiguration()->loadHelpers(array('sfEditable'));
   }
 }

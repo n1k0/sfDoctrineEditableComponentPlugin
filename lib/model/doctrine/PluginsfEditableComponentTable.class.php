@@ -4,9 +4,7 @@
  */
 class PluginsfEditableComponentTable extends Doctrine_Table
 {
-  const 
-    DEFAULT_NAMESPACE = 'default',
-    DEFAULT_TYPE = 'html';
+  const DEFAULT_TYPE = 'html';
   
   /**
    * Updates a component
@@ -14,15 +12,13 @@ class PluginsfEditableComponentTable extends Doctrine_Table
    * @param  string       $name       The component name
    * @param  string       $content    The component content
    * @param  string|null  $type       The component type (html, plain) (optional)
-   * @param  string|null  $namespace  The component namespace (optional)
    *
    * @return sfEditableComponent
    */
-  static function updateComponent($name, $content, $type = null, $namespace = null)
+  static function updateComponent($name, $content, $type = self::DEFAULT_TYPE)
   {
-    $component = Doctrine::getTable('sfEditableComponent')->getComponent($name, $type, $namespace);
+    $component = self::getComponent($name, $type);
     
-    // FIXME: filter html content
     $component->setContent($content);
     
     return $component->save();
@@ -33,42 +29,29 @@ class PluginsfEditableComponentTable extends Doctrine_Table
    *
    * @param  string       $name           The component name
    * @param  string|null  $type           The component type (html, plain) (optional)
-   * @param  string|null  $namespace      The component namespace (optional)
    * @param  Boolean      $createAndSave  Create a new record if component not found?
    *
    * @return sfEditableComponent
    */
-  static public function getComponent($name, $type = null, $namespace = null, $createAndSave = true)
+  static public function getComponent($name, $type = self::DEFAULT_TYPE, $createAndSave = true)
   {
-    if (is_null($type))
-    {
-      $type = self::DEFAULT_TYPE;
-    }
-    
-    if (is_null($namespace))
-    {
-      $namespace = self::DEFAULT_NAMESPACE;
-    }
-    
     $table = Doctrine::getTable('sfEditableComponent');
     
     $component = $table->createQuery('c')
-      ->where('c.name = ? and c.type = ? and c.namespace = ?', array($name, $type, $namespace))
-      ->fetchOne();
+      ->leftJoin('c.Translation ct INDEXBY ct.lang')
+      ->where('c.name = ? and c.type = ?', array($name, $type))
+      ->fetchOne()
+    ;
     
-    if (!$component)
+    if (!$component instanceof sfEditableComponent && true === $createAndSave)
     {
       $component = $table->create(array(
         'name'      => $name,
         'type'      => $type,
-        'namespace' => $namespace,
-        'content'   => sfConfig::get(sprintf('app_sfDoctrineEditableComponentPlugin_default_content.%s', $type), 'Double-click to edit me!'),
+        'content'   => sfConfig::get(sprintf('app_sfDoctrineEditableComponentPlugin_default_content.%s', $type), ''),
       ));
       
-      if (true === $createAndSave)
-      {
-        $component->save();
-      }
+      $component->save();
     }
     
     return $component;

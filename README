@@ -1,21 +1,18 @@
 sfDoctrineEditableComponent plugin
 ==================================
 
-**WARNING:** This plugin is currently in a very pre-alpha state, do not use in production.
+**WARNING:** This plugin is currently in an alpha state. Use with caution, feedback warmly welcome.
 
-This plugin allows to set up edit-in-place components (plain or wysiwyg), typically to enable content administration directly from the a frontend application.
+This plugin allows to set up edit-in-place components (plain or html), typically to enable content administration directly from the a frontend application.
 
-The plugin uses some cool libs like jQuery, jEditable, jWysiwyg and the Doctrine ORM for persistence. Rich HTML content can be filtered in order to avoid XSS attacks using HTMLPurifier.
+The plugin uses some cool javascript libs like jQuery, facebox, CKEditor and the Doctrine ORM for persistence.
 
-### Installation
-
-Using the native plugin installation system of Symfony:
-
-    $ php symfony plugin:install sfDoctrineEditableComponentPlugin
+Installation
+------------
 
 Using SVN:
 
-    $ svn co http://svn.symfony-project.com/plugins/sfDoctrineEditableComponentPlugin plugins/
+    $ svn co http://svn.symfony-project.com/plugins/sfDoctrineEditableComponentPlugin/trunk plugins/sfDoctrineEditableComponentPlugin
 
 Adds the `sfEditableComponentAdminFilter` filter in your application's `filter.yml` file:
 
@@ -27,48 +24,78 @@ Then, you're ready to run the following tasks:
     $ php symfony cache:clear
     $ php symfony doctrine:build-all
 
-You must also enable the `sfEditableComponent` module in the `settings.yml` file of your application:
+Enable the plugin in your `ProjectConfiguration.class.php` file:
 
-    all:
-      .settings:
-        enabled_modules: [default, sfEditableComponent]
+    [php]
+    class ProjectConfiguration extends sfProjectConfiguration
+    {
+      public function setup()
+      {
+        $this->enablePlugins(array(
+          'sfDoctrinePlugin',
+          'sfDoctrineEditableComponentPlugin',
+        ));
+      }
+    }
 
-Last, don't forget to publish the assets used by the plugin:
+Publish the assets used by the plugin:
 
     $ php symfony plugin:publish-assets
 
-### Usage
+**Note**: plugin helpers and modules will be enabled and loaded automatically.
 
-You can call editable components whithin any template, even if they don't exist yet in the database, this way:
+Configuration
+-------------
 
-    <?php include_component('sfEditableComponent', 'show', array('name' => 'content1')) ?>
-    <?php include_component('sfEditableComponent', 'show', array('name' => 'content2')) ?>
+The plugin ships with a bunch of assets (javascripts and stylesheets) for the following libraries:
 
-### Custom configuration
+ - [jQuery](http://jquery.com/)
+ - [Facebox](http://famspam.com/facebox)
+ - [CKeditor](http://ckeditor.com/)
 
-You can configure the plugin in your `app.yml` file, in the `namespace`. You can look at the `app.yml` file bundled with the plugin, which contains all plugin's default value. 
+If your project already uses these libs, you can redefine the `sfDoctrineEditableComponentPlugin` section of your application `app.yml` file, in both the `javascripts` and `stylesheets` subcategories of the `assets` section, in order to remove the automatic inclusion of them:
+
+    all:
+      sfDoctrineEditableComponentPlugin:
+        admin_credential: editable_content_admin
+        assets:
+          web_root:       /sfDoctrineEditableComponentPlugin
+          javascripts:
+            - /js/jquery-1.4.2.min.js #if your project already use jquery, remove this line
+            - /ckeditor/ckeditor.js
+            - /facebox/facebox.js
+          stylesheets:
+            - /facebox/facebox.css
+        component_css_class_name:  sfEditableComponent
+        default_content:          'Double-click to edit me'
+
+Usage
+-----
+
+You can display editable components whithin any template, even if they don't exist yet in the database, this way:
+
+    [php]
+    <?php echo editable_component('content1')) ?>
+
+Components become editable when the current user is authenticated and has the `editable_content_admin` credential (you can change this by editing the `app.yml` configuration, check the *Custom configuration* section below). 
+
+**Note:** The plugin doesn't provide any authentication nor credential persistence features. You can use the [sfDoctrineGuardPlugin](http://www.symfony-project.org/plugins/sfDoctrineGuardPlugin) plugin in order to easily obtain them.
+
+Custom configuration
+--------------------
+
+You can configure the plugin in your `app.yml` file. You can look at the `app.yml` file bundled with the plugin, which contains all plugin's default values. 
 
 Here are the main options available:
 
- - `admin_credential`: the name of the required credential for edit editable component
- - `controls.OK`: The label of the submit button in update form
- - `controls.Cancel`: The label of the cancel button in update form
- - `css_class_name`: The name of the css classname to use for editable content divs
- - `default_content.html`: The default content to fill an editable HTML component with
- - `default_content.plain`: The default content to fill an editable plan text component with
- - `update_error`: The error to display if the edition of an editable component fails
+ - `admin_credential`: the name of the required credential for editing editable components
+ - `component_css_class_name`: The name of the css classname to use for editable content divs
+ - `default_content`: The default caption text for an empty component, in editing mode.
 
 ### License
 
-This plugin is licensed under the terms of the MIT license.
+This plugin is licensed under the terms of the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
 
 ### About the author
 
 This plugin has been created and is currently maintened by Nicolas Perriault (nperriault at gmail dot com).
-
-### References
-
- - jQuery
- - jEditable plugin
- - jWysiwyg
- - HTMLPurifier

@@ -1,4 +1,8 @@
 sfEditableComponent:
+  actAs:
+    Timestampable: ~
+    I18n:
+      fields: [content]
   options:
     collate: utf8_unicode_ci
     charset: utf8
@@ -7,10 +11,6 @@ sfEditableComponent:
       type: integer(4)
       primary: true
       autoincrement: true
-    namespace:
-      type: string(255)
-      notblank: true
-      default: default
     name:
       type: string(255)
       notblank: true
@@ -26,5 +26,5 @@ sfEditableComponent:
       notnull: true
   indexes:
     unicity:
-      fields: [name, namespace, type] 
-      type: unique
+      fields: [name, type] 
+      type:   unique

@@ -1,10 +1,13 @@
 all:
   sfDoctrineEditableComponentPlugin:
-    admin_credential:      editable_content_admin
-    controls.OK:           OK
-    controls.Cancel:       Cancel
-    css_class_name:        sfEditableComponent
-    default_content.html:  '<p>Double-click to edit me!</p>'
-    default_content.plain: 'Double-click to edit me!'
-    update_error: >
-      <p class="sfDoctrineEditableComponentError">Error while saving your component.</p>'
+    admin_credential: editable_content_admin
+    assets:
+      web_root:       /sfDoctrineEditableComponentPlugin
+      javascripts:
+        - /js/jquery-1.4.2.min.js
+        - /ckeditor/ckeditor.js
+        - /facebox/facebox.js
+      stylesheets:
+        - /facebox/facebox.css
+    component_css_class_name:  sfEditableComponent
+    default_content:          'Double-click to edit me'

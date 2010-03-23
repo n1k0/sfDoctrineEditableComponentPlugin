@@ -17,37 +17,44 @@ class sfEditableComponentAdminFilter extends sfFilter
   {
     if ($this->isFirstCall() && $this->context->getUser()->hasCredential(sfConfig::get('app_sfDoctrineEditableComponentPlugin_admin_credential', 'editable_content_admin')))
     {
-      $response = $this->context->getResponse();
-      
-      # JavaScripts
-      $response->addJavascript('/sfDoctrineEditableComponentPlugin/js/jquery-1.3.2.min.js');
-      $response->addJavascript('/sfDoctrineEditableComponentPlugin/js/jquery.wysiwyg.js');
-      $response->addJavascript('/sfDoctrineEditableComponentPlugin/js/jquery.jeditable.min.js');
-      $response->addJavascript('/sfDoctrineEditableComponentPlugin/js/jquery.jeditable.wysiwyg.js');
-
-      # StyleSheets
-      $response->addStylesheet('/sfDoctrineEditableComponentPlugin/css/jquery.wysiwyg.css');
-      $response->addStylesheet('/sfDoctrineEditableComponentPlugin/css/sfDoctrineEditableComponentPlugin.css');
-       
-      # Append service link to body
-      $this->context->getEventDispatcher()->connect('response.filter_content', array($this, 'filterResponseContent'));
+      $this->addPluginAssets(sfConfig::get('app_sfDoctrineEditableComponentPlugin_assets', array()));
     }
     
     $filterChain->execute();
   }
   
   /**
-   * Appends a link containing the service url to the current DOM document
-   * 
-   * @param  sfEvent  $event    An event
-   * @param  string   $content  The current response content string
+   * Adds required or configured assets files to current response object, plus the admin 
+   * javascript file (mandatory)
    *
-   * @return string
+   * @param  array   $configuration
    */
-  public function filterResponseContent(sfEvent $event, $content)
+  protected function addPluginAssets(array $configuration = array())
   {
-    $serviceUrl = $this->context->getController()->genUrl('@editable_component_service');
+    $response = $this->context->getResponse();
     
-    return str_ireplace('</body>', sprintf('<a href="%s" id="sfEditableComponentService"></a></body>', $serviceUrl), $content);
+    $pluginWebRoot = isset($configuration['web_root']) ? $configuration['web_root'] : '';
+    
+    if (isset($configuration['javascripts']) && is_array($configuration['javascripts']))
+    {
+      foreach ($configuration['javascripts'] as $name => $javascript)
+      {
+        $response->addJavascript(sprintf('%s%s', $pluginWebRoot, $javascript), 'last');
+      }
+    }
+    
+    if (isset($configuration['stylesheets']) && is_array($configuration['stylesheets']))
+    {
+      foreach ($configuration['stylesheets'] as $name => $stylesheet)
+      {
+        $response->addStylesheet(sprintf('%s%s', $pluginWebRoot, $stylesheet), 'last');
+      }
+    }
+    
+    // The admin javascript file is handled by symfony
+    $response->addJavascript($this->context->getController()->genUrl('@editable_component_admin_js'), 'last');
+    
+    // The admin css file is handled by symfony
+    $response->addStylesheet($this->context->getController()->genUrl('@editable_component_admin_css'), 'last');
   }
 }
