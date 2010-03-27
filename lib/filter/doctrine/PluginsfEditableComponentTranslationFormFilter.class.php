@@ -1,12 +1,10 @@
 <?php
-
 /**
- * PluginsfEditableComponentTranslation form.
+ * PluginsfEditableComponentTranslation filter form.
  *
- * @package    ##PROJECT_NAME##
- * @subpackage filter
- * @author     ##AUTHOR_NAME##
- * @version    SVN: $Id: sfDoctrineFormFilterPluginTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @package    sfDoctrineEditableComponent
+ * @subpackage form
+ * @author     nperriault@gmail.com
  */
 abstract class PluginsfEditableComponentTranslationFormFilter extends BasesfEditableComponentTranslationFormFilter
 {

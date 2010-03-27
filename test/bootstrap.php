@@ -5,7 +5,9 @@ if (!isset($app))
   
   foreach (array_reverse(glob(dirname(__FILE__).'/../../../apps/*', GLOB_ONLYDIR)) as $dir)
   {
-    if (preg_match('/([a-z0-9_-])/i', $app = array_pop(explode(DIRECTORY_SEPARATOR, $dir))))
+    $apps = explode(DIRECTORY_SEPARATOR, $dir);
+    
+    if (preg_match('/([a-z0-9_-])/i', $app = array_pop($apps)))
     {
       break;
     }

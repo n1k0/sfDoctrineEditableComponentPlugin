@@ -79,6 +79,8 @@ You can display editable components whithin any template, even if they don't exi
 
 Components become editable when the current user is authenticated and has the `editable_content_admin` credential (you can change this by editing the `app.yml` configuration, check the *Custom configuration* section below). 
 
+Don't bother with components cache invalidation, it's already handled automatically on update. You can override the `cache.yml` of the `sfEditableComponent` module if you want to tweak its cache TTL though.
+
 **Note:** The plugin doesn't provide any authentication nor credential persistence features. You can use the [sfDoctrineGuardPlugin](http://www.symfony-project.org/plugins/sfDoctrineGuardPlugin) plugin in order to easily obtain them.
 
 Custom configuration
