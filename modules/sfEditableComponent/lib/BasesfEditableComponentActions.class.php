@@ -23,6 +23,7 @@ class BasesfEditableComponentActions extends sfActions
 
   public function executeJs(sfWebRequest $request)
   {
+    $this->useRichEditor = sfConfig::get('app_sfDoctrineEditableComponentPlugin_use_rich_editor', false);
     $this->forward404Unless($this->getUser()->hasCredential(sfConfig::get('app_sfDoctrineEditableComponentPlugin_admin_credential', 'editable_content_admin')));
   }
 
@@ -46,7 +47,7 @@ class BasesfEditableComponentActions extends sfActions
 
     return $this->renderText(json_encode(array(
       'error'  => $error,
-      'result' => $component ? $component->getContent() : '',
+      'result' => isset($component) ? $component->getContent() : '',
     )));
   }
 

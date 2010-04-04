@@ -13,8 +13,7 @@ sfEditableComponent:
       autoincrement: true
     name:
       type: string(255)
-      notblank: true
-      unique: true
+      notnull: true
     type:
       type: enum
       values:
@@ -26,5 +25,5 @@ sfEditableComponent:
       notnull: true
   indexes:
     unicity:
-      fields: [name, type] 
+      fields: [name] 
       type:   unique

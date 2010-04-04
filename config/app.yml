@@ -11,3 +11,4 @@ all:
         - /facebox/facebox.css
     component_css_class_name:  sfEditableComponent
     default_content:          'This is a placeholder. In editing mode, double-click me to edit.'
+    use_rich_editor:          true

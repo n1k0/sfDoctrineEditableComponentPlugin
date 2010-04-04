@@ -3,9 +3,9 @@ sfDoctrineEditableComponent plugin
 
 **WARNING:** This plugin is currently in an alpha state. Use with caution, feedback warmly welcome.
 
-This plugin allows to set up edit-in-place components (plain or html), typically to enable content administration directly from the a frontend application.
+This plugin allows to set up edit-in-place, i18n-ready components (plain or html), typically to enable simple contents administration directly from the a frontend application. For achieving this goal, it uses some cool javascript libs like jQuery, facebox, CKEditor and the Doctrine ORM for persistence.
 
-The plugin uses some cool javascript libs like jQuery, facebox, CKEditor and the Doctrine ORM for persistence.
+It's compatible with symfony 1.3 and 1.4.
 
 Installation
 ------------

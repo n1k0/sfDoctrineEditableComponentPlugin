@@ -20,10 +20,13 @@
 #sfEditableComponentForm {
 }
   #sfEditableComponentForm textarea {
-    width: 98%;
+    width: 600px;
     height: 120px;
+    margin-left: 20px;
   }
   #sfEditableComponentForm p {
+    padding: 0;
+    margin: 0;
     text-align: right;
   }
 
