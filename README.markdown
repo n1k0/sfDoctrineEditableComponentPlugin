@@ -24,20 +24,14 @@ If your project already uses `git`, you can add the plugin as one of its submodu
     $ git submodule update --init
     $ git commit -a -m"added sfDoctrineEditableComponentPlugin submodule"
 
+If you're an old school `svn` junkie, here's the way to go:
+
+    $ svn co http://svn.github.com/n1k0/sfDoctrineEditableComponentPlugin.git plugins/sfDoctrineEditableComponentPlugin
+
 Configuration
 -------------
 
-Adds the `sfEditableComponentAdminFilter` filter in your application's `filter.yml` file:
-
-    sfEditableComponentAdmin:
-      class: sfEditableComponentAdminFilter
-
-Then, you're ready to run the following tasks:
-
-    $ php symfony cache:clear
-    $ php symfony doctrine:build-all
-
-Enable the plugin in your `ProjectConfiguration.class.php` file:
+First, enable the plugin in your `ProjectConfiguration.class.php` file:
 
     <?php
     class ProjectConfiguration extends sfProjectConfiguration
@@ -51,14 +45,45 @@ Enable the plugin in your `ProjectConfiguration.class.php` file:
       }
     }
 
+Then, add the `sfEditableComponentAdminFilter` filter in your application's `filter.yml` file:
+
+    sfEditableComponentAdmin:
+      class: sfEditableComponentAdminFilter
+
+Now, you're ready to run the following tasks:
+
+    $ php symfony cache:clear
+    $ php symfony doctrine:build-all
+
 Publish the assets used by the plugin:
 
     $ php symfony plugin:publish-assets
 
 **Note**: plugin helpers and modules will be enabled and loaded automatically.
 
-Configuration
--------------
+Usage
+-----
+
+You can display editable components whithin any template, even if they don't exist yet in the database, this way:
+
+    <?php echo editable_component('content1')) ?>
+
+Components become editable when the current user is authenticated and has the `editable_content_admin` credential (you can change this by editing the `app.yml` configuration, check the *Custom configuration* section below). 
+
+Don't bother with components cache invalidation, it's already handled automatically on update. You can override the `cache.yml` of the `sfEditableComponent` module if you want to tweak its cache TTL though.
+
+**Note:** The plugin doesn't provide any authentication nor credential persistence features. You can use the [sfDoctrineGuardPlugin](http://www.symfony-project.org/plugins/sfDoctrineGuardPlugin) plugin in order to easily obtain them.
+
+Advanced configuration
+----------------------
+
+You can configure the plugin in your `app.yml` file. You can look at the `app.yml` file bundled with the plugin, which contains all plugin's default values. 
+
+Here are the main options available:
+
+ - `admin_credential`: the name of the required credential for editing editable components
+ - `component_css_class_name`: The name of the css classname to use for editable content divs
+ - `default_content`: The default caption text for an empty component, in editing mode.
 
 The plugin ships with a bunch of assets (javascripts and stylesheets) for the following libraries:
 
@@ -82,34 +107,12 @@ If your project already uses these libs, you can redefine the `sfDoctrineEditabl
         component_css_class_name:  sfEditableComponent
         default_content:          'Double-click to edit me'
 
-Usage
------
-
-You can display editable components whithin any template, even if they don't exist yet in the database, this way:
-
-    <?php echo editable_component('content1')) ?>
-
-Components become editable when the current user is authenticated and has the `editable_content_admin` credential (you can change this by editing the `app.yml` configuration, check the *Custom configuration* section below). 
-
-Don't bother with components cache invalidation, it's already handled automatically on update. You can override the `cache.yml` of the `sfEditableComponent` module if you want to tweak its cache TTL though.
-
-**Note:** The plugin doesn't provide any authentication nor credential persistence features. You can use the [sfDoctrineGuardPlugin](http://www.symfony-project.org/plugins/sfDoctrineGuardPlugin) plugin in order to easily obtain them.
-
-Custom configuration
---------------------
-
-You can configure the plugin in your `app.yml` file. You can look at the `app.yml` file bundled with the plugin, which contains all plugin's default values. 
-
-Here are the main options available:
-
- - `admin_credential`: the name of the required credential for editing editable components
- - `component_css_class_name`: The name of the css classname to use for editable content divs
- - `default_content`: The default caption text for an empty component, in editing mode.
-
-### License
+License
+-------
 
 This plugin is licensed under the terms of the [MIT license](http://en.wikipedia.org/wiki/MIT_License).
 
-### About the author
+About the author
+----------------
 
 This plugin has been created and is currently maintened by [Nicolas Perriault](http://github.com/n1k0). Feel free to contribute, I'll examine every patch, issue and pull request.
