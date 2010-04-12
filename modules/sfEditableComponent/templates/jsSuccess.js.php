@@ -108,7 +108,7 @@ $(document).ready(function(){
         $(form).children('h2').after('<p class="error">Error encountered: ' + result.error + '</p>');
         return false;
       }
-      $('#' + $('#sfEditableComponentId').val()).html($('#sfEditableComponentTextarea').val());
+      $('#' + $('#sfEditableComponentId').val()).html(result.result);
       $.facebox.close();
       return true;
     }, 'json');

@@ -1,10 +1,4 @@
-<<?php echo $tag ?> class="<?php echo $componentCssClassName ?> <?php echo $component ? $component->getType() : '' ?>"
-  id="<?php echo $name ?>">
-  <?php if ($component): ?>
-    <?php if ('html' === $component->getType()): ?>
-      <?php echo $component->getContent(ESC_RAW) ?>
-    <?php else: ?>
-      <?php echo $component->getContent() ?>  
-    <?php endif; ?>
-  <?php endif; ?>
-</<?php echo $tag ?>>
+<?php echo content_tag($tag, $component ? $component->getContent('html' === $component['type'] ? ESC_RAW : null) : null, array(
+  'id'    => $name,
+  'class' => sprintf('%s %s %s', $componentCssClassName, $component ? $component->getType() : '', isset($options['class']) ? $options['class'] : ''),
+)) ?>
