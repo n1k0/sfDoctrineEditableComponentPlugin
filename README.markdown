@@ -5,14 +5,27 @@ sfDoctrineEditableComponent plugin
 
 This plugin allows to set up edit-in-place, i18n-ready components (plain or html), typically to enable simple contents administration directly from the a frontend application. For achieving this goal, it uses some cool javascript libs like jQuery, facebox, CKEditor and the Doctrine ORM for persistence.
 
+![capture](http://files.droplr.com/files/6619162/NMP8V.cap.png "Capture")
+
 It's compatible with symfony 1.3 and 1.4.
 
 Installation
 ------------
 
-Using SVN:
+Using `git`, the standard way:
 
-    $ svn co http://svn.symfony-project.com/plugins/sfDoctrineEditableComponentPlugin/trunk plugins/sfDoctrineEditableComponentPlugin
+    $ cd /path/to/symfony/project
+    $ git clone git://github.com/n1k0/sfDoctrineEditableComponentPlugin.git plugins/sfDoctrineEditableComponentPlugin
+
+If your project already uses `git`, you can add the plugin as one of its submodule:
+
+    $ cd /path/to/symfony/project
+    $ git submodule add git://github.com/n1k0/sfDoctrineEditableComponentPlugin.git plugins/sfDoctrineEditableComponentPlugin
+    $ git submodule update --init
+    $ git commit -a -m"added sfDoctrineEditableComponentPlugin submodule"
+
+Configuration
+-------------
 
 Adds the `sfEditableComponentAdminFilter` filter in your application's `filter.yml` file:
 
@@ -26,7 +39,7 @@ Then, you're ready to run the following tasks:
 
 Enable the plugin in your `ProjectConfiguration.class.php` file:
 
-    [php]
+    <?php
     class ProjectConfiguration extends sfProjectConfiguration
     {
       public function setup()
@@ -74,7 +87,6 @@ Usage
 
 You can display editable components whithin any template, even if they don't exist yet in the database, this way:
 
-    [php]
     <?php echo editable_component('content1')) ?>
 
 Components become editable when the current user is authenticated and has the `editable_content_admin` credential (you can change this by editing the `app.yml` configuration, check the *Custom configuration* section below). 
@@ -100,4 +112,4 @@ This plugin is licensed under the terms of the [MIT license](http://en.wikipedia
 
 ### About the author
 
-This plugin has been created and is currently maintened by Nicolas Perriault (nperriault at gmail dot com).
+This plugin has been created and is currently maintened by [Nicolas Perriault](http://github.com/n1k0). Feel free to contribute, I'll examine every patch, issue and pull request.
