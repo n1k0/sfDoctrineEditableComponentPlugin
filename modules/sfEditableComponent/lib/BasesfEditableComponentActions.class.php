@@ -35,20 +35,31 @@ class BasesfEditableComponentActions extends sfActions
   public function executeGet(sfWebRequest $request)
   {
     $result = $error = '';
-
-    try
+    
+    if (!$request->hasParameter('name') || !$request->hasParameter('type'))
     {
-      $component = sfEditableComponentTable::getComponent($this->name, $this->type);
+      $error = 'Missing component name or type values, cannot create nor update component record';
     }
-    catch (Exception $e)
+    else
     {
-      $error = $e->getMessage();
+      try
+      {
+        $component = sfEditableComponentTable::getComponent(
+          $name = $request->getParameter('name'), 
+          $type = $request->getParameter('type')
+        );
+        
+        $result = $component->getContent();
+      }
+      catch (Exception $e)
+      {
+        $this->logMessage(sprintf('{%s} %s', __CLASS__, $e->getMessage()), 'err');
+        
+        $error = sprintf('Unable to create nor retrieve component contents for "%s"', $name);
+      }
     }
 
-    return $this->renderText(json_encode(array(
-      'error'  => $error,
-      'result' => isset($component) ? $component->getContent() : '',
-    )));
+    return $this->renderResult($result, $error);
   }
 
   /**
@@ -66,12 +77,12 @@ class BasesfEditableComponentActions extends sfActions
 
       $error = 'Forbidden';
     }
-
-    if (!$request->hasParameter('id') || !$request->hasParameter('value'))
+    else if (!$request->hasParameter('id') || !$request->hasParameter('value'))
     {
       $error = 'Missing parameters';
     }
     
+    // Dispatching of editable_component.filter_contents event
     $result = $this->dispatcher->filter(new sfEvent($this, 'editable_component.filter_contents', array(
       'name' => $name = $request->getParameter('id'),
       'type' => $type = $request->getParameter('type', PluginsfEditableComponentTable::DEFAULT_TYPE),
@@ -86,11 +97,17 @@ class BasesfEditableComponentActions extends sfActions
       $error = sprintf('Unable to update component "%s": %s', $name, $e->getMessage());
     }
     
+    // Dispatching of editable_component.updated event
     $this->dispatcher->notify(new sfEvent($component, 'editable_component.updated', array(
       'view_cache' => $this->context->getViewCacheManager(),
       'culture'    => $this->getUser()->getCulture(),
     )));
 
+    return $this->renderResult($result, $error);
+  }
+  
+  protected function renderResult($result = null, $error = null)
+  {
     return $this->renderText(json_encode(array(
       'error'  => $error,
       'result' => $result,
