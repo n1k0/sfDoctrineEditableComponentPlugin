@@ -75,7 +75,7 @@ $(document).ready(function(){
           '<div><code>&lt;/' + tagName + '&gt;</code></div>'
         ];
         var switchLink = '';
-        if (!useRichEditor) {
+        if (!useRichEditor && 'html' == type) {
           switchLink = '<a href="" id="sfEditableComponentSwitch">Switch to rich editor</a>&nbsp;'
         }
         var formHtml = '<form action="' + updateServiceUrl + '" method="post" id="sfEditableComponentForm">'
