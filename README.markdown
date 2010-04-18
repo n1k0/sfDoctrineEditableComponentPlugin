@@ -64,15 +64,77 @@ Publish the assets used by the plugin:
 Usage
 -----
 
+### Basic usage
+
 You can display editable components whithin any template, even if they don't exist yet in the database, this way:
 
     <?php echo editable_component('content1')) ?>
 
-Components become editable when the current user is authenticated and has the `editable_content_admin` credential (you can change this by editing the `app.yml` configuration, check the *Custom configuration* section below). 
+Components become editable when the current user is authenticated and has the `editable_content_admin` credential (you can change this by editing the `app.yml` configuration, check the *Advanced configuration* section further in this document).
 
-Don't bother with components cache invalidation, it's already handled automatically on update. You can override the `cache.yml` of the `sfEditableComponent` module if you want to tweak its cache TTL though.
+There are two types of editable component: `html` and `plain` ones; By default, editable components are of the `html` one, allowing rich text contents. But you can manage plain text components by calling the helper this way:
 
-**Note:** The plugin doesn't provide any authentication nor credential persistence features. You can use the [sfDoctrineGuardPlugin](http://www.symfony-project.org/plugins/sfDoctrineGuardPlugin) plugin in order to easily obtain them.
+    <?php echo editable_component('content2', 'plain')) ?>
+
+By default, editable components create a `<div/>` tag to embed contents; you can change this by caling the `editable_component()` helper this way:
+
+    <?php echo editable_component('about-page-header-title', 'plain', 'h2')) ?>
+
+Last, you can pass some options to the helper, for example let's add some supplementary CSS class names to the generated component html element:
+
+    <?php echo editable_component('about-page-header-title', 'plain', 'h2', array(
+      'class' => 'fancy-css-rule-name-here',
+    ))) ?>
+
+### Caching editable components
+
+Don't bother with components cache invalidation, it's already handled automatically on update, just ensure the `cache` configuration flag is set to true in your application `settings.yml` file. 
+
+You can override the `cache.yml` of the `sfEditableComponent` module if you want to tweak its cache TTL though.
+
+### Note regarding authentication
+
+The plugin doesn't provide any authentication nor credential persistence features. You can use the [sfDoctrineGuardPlugin](http://www.symfony-project.org/plugins/sfDoctrineGuardPlugin) plugin in order to easily obtain them.
+
+Advanced usage
+--------------
+
+The plugin provides two convenient events to easily allow hooks on the component creation and update workflow:
+
+### The `editable_component.filter_contents` filter event
+
+This event is notified whenever the contents of a component is about to be saved in the database. You can catch this event in order to filter these contents:
+
+    public function configure()
+    {
+      $this->dispatcher->connect('editable_component.filter_contents', array($this, 'filterEditableComponentContents'));
+    }
+
+    public function filterEditableComponentContents(sfEvent $event, $componentContents)
+    {
+      return strtoupper($componentContents);
+    }
+
+In this dumb example, all component contents will be uppercased on save.
+
+### The `editable_component.updated` notification event
+
+This filter event is dispatched whenever component contents are updated and saved in the database.
+
+As an example, this is this event the plugin uses for invalidating components cache on update:
+
+    public function configure()
+    {
+      $this->dispatcher->connect('editable_component.updated', array($this, 'listenToComponentUpdated'));
+    }
+    
+    public function listenToComponentUpdated(sfEvent $event)
+    {
+      if ($event['view_cache'] instanceof sfViewCacheManager)
+      {
+        $event['view_cache']->remove(sprintf('@sf_cache_partial?module=sfEditableComponent&action=_show&sf_cache_key=%s', $event->getSubject()->getCacheKey($event['culture'])));
+      }
+    }
 
 Advanced configuration
 ----------------------
@@ -82,14 +144,18 @@ You can configure the plugin in your `app.yml` file. You can look at the `app.ym
 Here are the main options available:
 
  - `admin_credential`: the name of the required credential for editing editable components
+ - `assets`: A dedicated section allowing fine grained configuration of assets and libraries shipped with the plugin, read next section for more information.
  - `component_css_class_name`: The name of the css classname to use for editable content divs
  - `default_content`: The default caption text for an empty component, in editing mode.
+ - `use_rich_editor`: Enable the CKEditor powered rich text editing feature for HTML components
+
+### Plugin assets configuration
 
 The plugin ships with a bunch of assets (javascripts and stylesheets) for the following libraries:
 
- - [jQuery](http://jquery.com/)
- - [Facebox](http://famspam.com/facebox)
- - [CKeditor](http://ckeditor.com/)
+ - [jQuery](http://jquery.com/): the well-known javascript library
+ - [Facebox](http://famspam.com/facebox): a fancy and lightweight lightbox clone compatible with jQuery
+ - [CKeditor](http://ckeditor.com/): A full featured rich text editor
 
 If your project already uses these libs, you can redefine the `sfDoctrineEditableComponentPlugin` section of your application `app.yml` file, in both the `javascripts` and `stylesheets` subcategories of the `assets` section, in order to remove the automatic inclusion of them:
 
@@ -97,15 +163,18 @@ If your project already uses these libs, you can redefine the `sfDoctrineEditabl
       sfDoctrineEditableComponentPlugin:
         admin_credential: editable_content_admin
         assets:
-          web_root:       /sfDoctrineEditableComponentPlugin
+          web_root: /sfDoctrineEditableComponentPlugin
           javascripts:
-            - /js/jquery-1.4.2.min.js #if your project already use jquery, remove this line
+            # by commenting the lines above, jQuery won't be loaded by the plugin
+            # - /js/jquery-1.4.2.min.js
             - /ckeditor/ckeditor.js
-            - /facebox/facebox.js
+            - /facebox/facebox.js 
           stylesheets:
             - /facebox/facebox.css
-        component_css_class_name:  sfEditableComponent
-        default_content:          'Double-click to edit me'
+        component_css_class_name: sfEditableComponent
+        default_content: >
+          This is a placeholder. In editing mode, double-click me to edit.
+        use_rich_editor: true
 
 License
 -------

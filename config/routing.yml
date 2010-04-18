@@ -1,3 +1,5 @@
+# sfDoctrineEditableComponentPlugin standard routes
+#
 editable_component_admin_css:
   url:   /js/editable_component.css
   param: { module: sfEditableComponent, action: css, sf_format: css }
@@ -15,7 +17,3 @@ editable_component_service_update:
   param: { module: sfEditableComponent, action: update, sf_format: json }
   requirement:
     sf_method: [post]
-
-editable_component_auth_test_service:
-  url:   /editable_component_auth_test_service
-  param: { module: sfEditableComponentTestUtility, action: auth }

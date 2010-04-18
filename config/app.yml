@@ -2,13 +2,14 @@ all:
   sfDoctrineEditableComponentPlugin:
     admin_credential: editable_content_admin
     assets:
-      web_root:       /sfDoctrineEditableComponentPlugin
+      web_root: /sfDoctrineEditableComponentPlugin
       javascripts:
         - /js/jquery-1.4.2.min.js
         - /ckeditor/ckeditor.js
         - /facebox/facebox.js
       stylesheets:
         - /facebox/facebox.css
-    component_css_class_name:  sfEditableComponent
-    default_content:          'This is a placeholder. In editing mode, double-click me to edit.'
-    use_rich_editor:          true
+    component_css_class_name: sfEditableComponent
+    default_content: >
+      This is a placeholder. In editing mode, double-click me to edit.
+    use_rich_editor: true

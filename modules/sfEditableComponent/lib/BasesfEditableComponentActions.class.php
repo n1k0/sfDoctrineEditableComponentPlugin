@@ -4,7 +4,7 @@
  *
  * @package    sfDoctrineEditableComponent
  * @subpackage action
- * @author     nperriault@gmail.com
+ * @author     Nicolas Perriault <nperriault@gmail.com>
  */
 class BasesfEditableComponentActions extends sfActions
 {

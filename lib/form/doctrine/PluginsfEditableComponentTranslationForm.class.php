@@ -4,7 +4,7 @@
  *
  * @package    sfDoctrineEditableComponent
  * @subpackage form
- * @author     nperriault@gmail.com
+ * @author     Nicolas Perriault <nperriault@gmail.com>
  */
 abstract class PluginsfEditableComponentTranslationForm extends BasesfEditableComponentTranslationForm
 {

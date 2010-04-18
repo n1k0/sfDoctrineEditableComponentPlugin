@@ -4,7 +4,7 @@
  *
  * @package    sfDoctrineEditableContent
  * @subpackage filter
- * @author     nperriault@gmail.com
+ * @author     Nicolas Perriault <nperriault@gmail.com>
  */
 class sfEditableComponentAdminFilter extends sfFilter
 {
