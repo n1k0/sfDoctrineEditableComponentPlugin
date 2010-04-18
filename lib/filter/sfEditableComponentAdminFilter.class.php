@@ -1,6 +1,7 @@
 <?php
 /**
- * Checks for admin credential and loads appropriate javascript/css files to allow frontend admin
+ * Checks for admin credential and loads appropriate javascript/css files to allow editable 
+ * components admin from a frontend context
  *
  * @package    sfDoctrineEditableContent
  * @subpackage filter
@@ -9,7 +10,8 @@
 class sfEditableComponentAdminFilter extends sfFilter
 {
   /**
-   * Executes this filter.
+   * This filter will check if the current connected user has the configured credential in
+   * order to load the admin javascript and css files
    *
    * @param sfFilterChain $filterChain A sfFilterChain instance
    */
@@ -17,7 +19,7 @@ class sfEditableComponentAdminFilter extends sfFilter
   {
     if ($this->isFirstCall() && $this->context->getUser()->hasCredential(sfConfig::get('app_sfDoctrineEditableComponentPlugin_admin_credential', 'editable_content_admin')))
     {
-      $this->addPluginAssets(sfConfig::get('app_sfDoctrineEditableComponentPlugin_assets', array()));
+      $this->addPluginAssets();
     }
     
     $filterChain->execute();
@@ -25,30 +27,32 @@ class sfEditableComponentAdminFilter extends sfFilter
   
   /**
    * Adds required or configured assets files to current response object, plus the admin 
-   * javascript file (mandatory)
+   * javascript and stylesheet files (mandatory)
    *
-   * @param  array   $configuration
    */
-  protected function addPluginAssets(array $configuration = array())
+  protected function addPluginAssets()
   {
     $response = $this->context->getResponse();
     
-    $pluginWebRoot = isset($configuration['web_root']) ? $configuration['web_root'] : '';
-    
-    if (isset($configuration['javascripts']) && is_array($configuration['javascripts']))
+    $pluginWebRoot = sfConfig::get('app_sfDoctrineEditableComponentPlugin_assets_web_root', '');
+
+    // JQuery
+    if (true === sfConfig::get('app_sfDoctrineEditableComponentPlugin_load_jquery'))
     {
-      foreach ($configuration['javascripts'] as $name => $javascript)
-      {
-        $response->addJavascript(sprintf('%s%s', $pluginWebRoot, $javascript), 'last');
-      }
+      $response->addJavascript(sprintf('%s/js/jquery-1.4.2.min.js', $pluginWebRoot), 'last');
     }
     
-    if (isset($configuration['stylesheets']) && is_array($configuration['stylesheets']))
+    // Facebox
+    if (true === sfConfig::get('app_sfDoctrineEditableComponentPlugin_load_facebox'))
     {
-      foreach ($configuration['stylesheets'] as $name => $stylesheet)
-      {
-        $response->addStylesheet(sprintf('%s%s', $pluginWebRoot, $stylesheet), 'last');
-      }
+      $response->addJavascript(sprintf('%s/facebox/facebox.js', $pluginWebRoot), 'last');
+      $response->addStylesheet(sprintf('%s/facebox/facebox.css', $pluginWebRoot), 'last');
+    }
+    
+    // CKEditor
+    if (true === sfConfig::get('app_sfDoctrineEditableComponentPlugin_load_ckeditor'))
+    {
+      $response->addJavascript(sprintf('%s/ckeditor/ckeditor.js', $pluginWebRoot), 'last');
     }
     
     // The admin javascript file is handled by symfony

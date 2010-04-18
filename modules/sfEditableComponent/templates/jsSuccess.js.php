@@ -1,7 +1,7 @@
 $(document).ready(function(){
   // Configuration
   var componentCssClassName = '<?php echo $componentCssClassName ?>';
-  var defaultContent = '<?php echo str_replace("'" , "\'", $defaultContent) ?>';
+  var defaultContent = '<?php echo str_replace(array("'", "\n") , array("\'", ''), $defaultContent) ?>';
   var getServiceUrl = '<?php echo url_for('@editable_component_service_get') ?>';
   var pluginWebRoot = '<?php echo $pluginWebRoot ?>';
   var updateServiceUrl = '<?php echo url_for('@editable_component_service_update') ?>';

@@ -139,42 +139,18 @@ As an example, this is this event the plugin uses for invalidating components ca
 Advanced configuration
 ----------------------
 
-You can configure the plugin in your `app.yml` file. You can look at the `app.yml` file bundled with the plugin, which contains all plugin's default values. 
+You can configure the plugin in your `app.yml` file. You can look at the `app.yml` file bundled with the plugin, which contains all default values. 
 
 Here are the main options available:
 
  - `admin_credential`: the name of the required credential for editing editable components
- - `assets`: A dedicated section allowing fine grained configuration of assets and libraries shipped with the plugin, read next section for more information.
+ - `assets_web_root`: The plugin assets web root (in case you want to move them or rename their directory)
  - `component_css_class_name`: The name of the css classname to use for editable content divs
  - `default_content`: The default caption text for an empty component, in editing mode.
+ - `load_ckeditor`: Shall the plugin add CKEditor web assets to the response?
+ - `load_facebox`: Shall the plugin add jQuery javascript file to the response?
+ - `load_jquery`: Shall the plugin add Facebox web assets to the response?
  - `use_rich_editor`: Enable the CKEditor powered rich text editing feature for HTML components
-
-### Plugin assets configuration
-
-The plugin ships with a bunch of assets (javascripts and stylesheets) for the following libraries:
-
- - [jQuery](http://jquery.com/): the well-known javascript library
- - [Facebox](http://famspam.com/facebox): a fancy and lightweight lightbox clone compatible with jQuery
- - [CKeditor](http://ckeditor.com/): A full featured rich text editor
-
-If your project already uses these libs, you can redefine the `sfDoctrineEditableComponentPlugin` section of your application `app.yml` file, in both the `javascripts` and `stylesheets` subcategories of the `assets` section, in order to remove the automatic inclusion of them:
-
-    all:
-      sfDoctrineEditableComponentPlugin:
-        admin_credential: editable_content_admin
-        assets:
-          web_root: /sfDoctrineEditableComponentPlugin
-          javascripts:
-            # by commenting the lines above, jQuery won't be loaded by the plugin
-            # - /js/jquery-1.4.2.min.js
-            - /ckeditor/ckeditor.js
-            - /facebox/facebox.js 
-          stylesheets:
-            - /facebox/facebox.css
-        component_css_class_name: sfEditableComponent
-        default_content: >
-          This is a placeholder. In editing mode, double-click me to edit.
-        use_rich_editor: true
 
 License
 -------
