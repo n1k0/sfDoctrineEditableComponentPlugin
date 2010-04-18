@@ -4,7 +4,7 @@
  *
  * @package    sfDoctrineEditableComponentPlugin
  * @subpackage component
- * @author     nperriault@gmail.com
+ * @author     Nicolas Perriault <nperriault@gmail.com>
  */
 
 class BasesfEditableComponentComponents extends sfComponents

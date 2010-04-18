@@ -4,7 +4,7 @@
  * 
  * @package    sfDoctrineEditableComponentPlugin
  * @subpackage config
- * @author     nperriault@gmail.com
+ * @author     Nicolas Perriault <nperriault@gmail.com>
  */
 class sfDoctrineEditableComponentPluginConfiguration extends sfPluginConfiguration
 {

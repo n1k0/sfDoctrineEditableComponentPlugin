@@ -6,7 +6,7 @@ require_once dirname(__FILE__).'/../lib/BasesfEditableComponentActions.class.php
  *
  * @package    sfDoctrineEditableComponent
  * @subpackage action
- * @author     nperriault@gmail.com
+ * @author     Nicolas Perriault <nperriault@gmail.com>
  */
 class sfEditableComponentActions extends BasesfEditableComponentActions
 {
