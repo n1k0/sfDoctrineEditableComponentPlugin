@@ -59,6 +59,6 @@ class sfEditableComponentAdminFilter extends sfFilter
     $response->addJavascript($this->context->getController()->genUrl('@editable_component_admin_js'), 'last');
     
     // The admin css file is handled by symfony
-    $response->addStylesheet($this->context->getController()->genUrl('@editable_component_admin_css'), 'last');
+    $response->addStylesheet($this->context->getController()->genUrl('@editable_component_admin_css'), 'first');
   }
 }
