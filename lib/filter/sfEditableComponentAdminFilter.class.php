@@ -17,9 +17,14 @@ class sfEditableComponentAdminFilter extends sfFilter
    */
   public function execute($filterChain)
   {
-    if ($this->isFirstCall() && $this->context->getUser()->hasCredential(sfConfig::get('app_sfDoctrineEditableComponentPlugin_admin_credential', 'editable_content_admin')))
+    if ($this->isFirstCall())
     {
-      $this->addPluginAssets();
+      $credential = sfConfig::get('app_sfDoctrineEditableComponentPlugin_admin_credential', 'editable_content_admin');
+      if ($this->context->getUser()->hasCredential($credential)
+        || ($credential === false && $this->context->getUser()->isAuthenticated()))
+      {
+        $this->addPluginAssets();
+      }
     }
     
     $filterChain->execute();
