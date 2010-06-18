@@ -19,8 +19,12 @@ class sfEditableComponentAdminFilter extends sfFilter
   {
     if ($this->isFirstCall())
     {
+      // load plugin assets if
+      //   1) The credential was specified and the user has it
+      //   2) No credential was specified, but the user is at least authenticated
       $credential = sfConfig::get('app_sfDoctrineEditableComponentPlugin_admin_credential', 'editable_content_admin');
-      if ($this->context->getUser()->hasCredential($credential)
+      if (
+        ($credential && $this->context->getUser()->hasCredential($credential))
         || ($credential === false && $this->context->getUser()->isAuthenticated()))
       {
         $this->addPluginAssets();
